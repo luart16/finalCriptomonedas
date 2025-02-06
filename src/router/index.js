@@ -1,25 +1,39 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '../store/userStore'
+import LoginForm from '../components/LoginForm.vue'
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/login',
+    name: 'login',
+    component: LoginForm
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/',
+    redirect: () => {
+      const userStore = useUserStore()
+      return userStore.userId ? '/dashboard' : '/login'
+    }
   }
+  // Aquí puedes agregar más rutas protegidas
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
+})
+
+// Guard de navegación para proteger rutas
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore()
+  
+  if (to.path !== '/login' && !userStore.userId) {
+    next('/login')
+  } else if (to.path === '/login' && userStore.userId) {
+    next('/dashboard')
+  } else {
+    next()
+  }
 })
 
 export default router
