@@ -50,7 +50,7 @@ const handleLogin = async () => {
   try {
     const success = await userStore.validateAndSetUserId(userId.value)
     if (success) {
-      router.push('/dashboard') 
+      router.push('/nueva-compra') 
     } else {
       error.value = userStore.error || 'Error al validar el ID'
     }
