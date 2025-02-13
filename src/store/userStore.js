@@ -1,22 +1,12 @@
 import { defineStore } from 'pinia'
-import apiClient from '../Services/axios' //#####********agregué esta línea
+import apiClient from '../Services/axios' 
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     userId: null,
-    error: null //########************agregué esta linea */
+    error: null 
   }),
-  // actions: {
-  //   setUserId(id) {
-  //     this.userId = id
-  //   },
-  //   logout() {
-  //     this.userId = null
-  //   }
-  // },
-  // persist: true  // Simplificado a true
-
-  //#####**************comenté todo el código anterior y puse este: */
+  
   actions: {
     async validateAndSetUserId(id) {
       try {
