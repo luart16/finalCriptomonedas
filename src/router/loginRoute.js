@@ -1,20 +1,27 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '../store/userStore'
-import LoginForm from '../components/LoginComponent.vue'
+import LoginView from '../views/HomeView.vue'
 
 const routes = [
   {
     path: '/login',
     name: 'login',
-    component: LoginForm
+    component: LoginView
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: HomeView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/',
     redirect: () => {
       const userStore = useUserStore()
-      return userStore.userId ? '/about' : '/login' // 🔹 Cambia '/dashboard' por '/about' si ya existe
+      return userStore.userId ? '/home' : '/login'
     }
   }
+ 
 ]
 
 const router = createRouter({
@@ -22,13 +29,14 @@ const router = createRouter({
   routes
 })
 
+
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-
-  if (to.path !== '/login' && !userStore.userId) {
+  
+  if (to.meta.requiresAuth && !userStore.userId) {
     next('/login')
   } else if (to.path === '/login' && userStore.userId) {
-    next('/about') // 🔹 Redirige a '/about' en lugar de '/dashboard'
+    next('/home')
   } else {
     next()
   }
