@@ -41,19 +41,28 @@ const isValidId = computed(() => {
   return /^[a-zA-Z0-9]+$/.test(userId.value)
 })
 
+
+const handleLogin = () => {
+
 const handleLogin = async () => {
+
   if (!isValidId.value) {
     error.value = 'El ID debe contener solo letras y números'
     return
   }
 
   try {
+
+    userStore.setUserId(userId.value)
+    router.push('/dashboard') // O la ruta que corresponda
+
     const success = await userStore.validateAndSetUserId(userId.value)
     if (success) {
       router.push('/nueva-compra') 
     } else {
       error.value = userStore.error || 'Error al validar el ID'
     }
+
   } catch (e) {
     error.value = 'Error al iniciar sesión'
   }

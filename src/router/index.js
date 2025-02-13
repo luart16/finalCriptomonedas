@@ -18,11 +18,24 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 
 router.beforeEach((to, from, next) => {
+
+  if (to.meta.requiresAuth) {
+    const userId = localStorage.getItem('userId')
+    if (!userId) {
+        next({ 
+            name: 'login',
+            query: { redirect: to.fullPath } 
+        })
+        return
+    }
+}
+next()
+
   const userStore = useUserStore()
 
   if (to.path !== '/login' && !userStore.userId) {
