@@ -67,6 +67,7 @@ const handleLogin = async () => {
     error.value = 'Error al iniciar sesión'
   }
 }
+}
 </script>
 
 <style scoped>
