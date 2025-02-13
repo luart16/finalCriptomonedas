@@ -23,6 +23,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
   if (to.meta.requiresAuth) {
     const userId = localStorage.getItem('userId')
     if (!userId) {
@@ -34,6 +35,16 @@ router.beforeEach((to, from, next) => {
     }
 }
 next()
+
+  const userStore = useUserStore()
+
+  if (to.path !== '/login' && !userStore.userId) {
+    next('/login')
+  } else if (to.path === '/login' && userStore.userId) {
+    next('/about') // 🔹 Redirige a '/about' en lugar de '/dashboard'
+  } else {
+    next()
+  }
 })
 
 export default router
